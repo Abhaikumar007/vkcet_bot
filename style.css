@@ -1,0 +1,55 @@
+.ui{
+  width:50%;
+  margin:0 auto;
+}
+span{
+  color:yellow;
+}
+h1{
+  color:white;font-weight: bold; font-size:50px;
+  text-align:center;
+  transition:1s;
+  
+}
+.container {
+        max-width: 600px;
+        margin: 50px auto;
+        padding: 20px;
+        border: 1px solid #ccc;
+        border-radius: 10px;
+    }
+    .chat-box {
+        height: 300px;
+        overflow-y: auto;
+        border: 1px solid #ccc;
+        padding: 10px;
+        margin-bottom: 20px;
+    }
+    input[type="text"] {
+        width: calc(100% - 60px);
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        margin-right: 10px;
+    }
+    input[type="button"] {
+        padding: 10px 20px;
+        background-color: #007bff;
+        color: #fff;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+h1:hover{
+  text-shadow: #FC0 1px 0 10px;
+}
+p{line-height: 1.5;color:grey;
+}
+p::selection{
+  color:white;
+}
+body{
+ 
+ font-family:Calibri;
+  background-image: linear-gradient(90deg, #000000, #191818, #2a2929, #3c3c3b, #4f4f4e);
+}

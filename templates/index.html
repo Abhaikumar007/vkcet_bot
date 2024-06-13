@@ -1,0 +1,168 @@
+<html>
+
+  <head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.25.0/themes/prism.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.25.0/prism.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+<style>  body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+background-color:white;
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+        }
+        h3{
+        text-align:center;
+        font-size:5em;
+        color:#5D5D5D;
+        
+}
+        .chat-box {
+border-style: solid;
+  border-color: coral;
+    background-color: #191818;
+
+            height: 300px;
+            overflow-y: auto;
+            border: 1px solid #ccc;
+            padding: 10px;
+            margin-bottom: 20px;
+        }
+        input[type="text"] {
+            width: calc(100% - 60px);
+            color:blue;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            margin-right: 10px;
+        }
+        input[type="button"] {
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+@media (max-width: 600px) {
+            .container {
+                width: 90%;
+                margin: 20px auto;
+                padding: 10px;
+            }
+            input[type="text"] {
+                width: calc(100% - 50px);
+            }
+            input[type="button"] {
+                padding: 8px 16px;
+            }
+            h3 {
+                font-size: 1.5em;
+            }
+            .chat-box {
+                height: 200px;
+            }
+          
+            .ui h1 {
+                font-size: 1.5em;
+            }
+            .ui p {
+                font-size: 0.9em;
+            }
+        }
+</style>
+  </head>
+  <body>
+    <div class="ui">
+    <h1>VKCET BOT </h1>
+    <p>Vkcet_Bot is a tech bot developed by the Young minds of VKCET College,Paripally..This Bot is based on the latest Gpt model and <span>currently this is at a beta stage so be gentle with the server</span> and soon it will be  updated with a good server and will be finely tuned to make a good assistant..So until then <span style="color:white;">happy learning and happy coding..</span></p>
+    </div>
+    <div class="container">
+        <div class="chat-box" id="chatBox">
+        <h3 id="tag">BOT</h3> 
+        </div>
+        <div>
+            <input type="text" id="userInput" placeholder="Chat with Me.. &#x1F601;">
+            <input id="myBtn" type="button" value="Send" onclick="sendMessage()">
+        </div>
+    </div>
+<footer>
+ <p style="color:grey; font-size:10px;text-align:right;">@CodingClub Thanks for Supporting Us.</p>
+</footer>
+<script>
+gsap.fromTo(".ui", { opacity: 0 ,scale:0}, { opacity: 1,scale:1, duration: 1});
+gsap.fromTo(".container", { opacity: 0 }, { opacity: 1, duration: 2,delay:1 });
+function sendMessage() {
+            const userInput = document.getElementById('userInput').value;
+            if (!userInput) return;
+            tag.innerText = '';
+            // Append user message to chat box
+            const chatBox = document.getElementById('chatBox');
+            
+            chatBox.innerHTML += `<p><strong>You:</strong> ${userInput}</p>`;
+
+            // Clear input field
+            document.getElementById('userInput').value = '';
+
+            // Send message to the Flask server
+            fetch('/get_response', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ user_input: userInput })
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(data => {
+                let agentResponse = data.agent_response.replace(/</g, "&lt;").replace(/>/g, "&gt;");
+                
+                // Split response into code and non-code segments
+                const segments = agentResponse.split(/(```[\s\S]*?```)/).filter(Boolean);
+                
+               segments.forEach(segment => {
+    if (segment.startsWith('```') && segment.endsWith('```')) {
+        const code = segment.slice(3, -3);
+        chatBox.innerHTML += `<pre><code class="language-javascript">${code}</code></pre>`;
+    } else {
+        const replacedSegment = segment.replace(/\./g, '.\n'); // Replace '.' with '/n'
+        chatBox.innerHTML += `<p style="color:#E4D00A;"><strong>VKCET_Bot:</strong> ${replacedSegment}</p>`;
+    }
+});
+
+
+                Prism.highlightAll();  // Apply syntax highlighting
+                 // Apply syntax highlighting
+
+
+                chatBox.scrollTop = chatBox.scrollHeight;
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                chatBox.innerHTML += `<p style="color:red;"><strong>Error:</strong> ${error.message}</p>`;
+            });
+        }
+       var input = document.getElementById("userInput");
+input.addEventListener("keypress", function(event) {
+  if (event.key === "Enter") {
+    event.preventDefault();
+    document.getElementById("myBtn").click();
+  }
+});
+
+    </script>
+  </body>
+
+</html>

@@ -1,0 +1,91 @@
+<html>
+  <head>
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+<style>  body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+        }
+        .chat-box {
+            color:green;
+            height: 300px;
+            overflow-y: auto;
+            border: 1px solid #ccc;
+            padding: 10px;
+            margin-bottom: 20px;
+        }
+        input[type="text"] {
+            width: calc(100% - 60px);
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            margin-right: 10px;
+        }
+        input[type="button"] {
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: yellow;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }</style>
+  </head>
+  <body>
+    <div class="ui">
+    <h1>VKCET BOT </h1>
+    <p>Vkcet_Bot is a tech bot developed by the Young minds of VKCET College,Paripally..This Bot is based on the latest Gpt model and <span>currently this is at a beta stage so be gentle with the server</span> and soon it will be  updated with a good server and will be finely tuned to make a good assistant..So until then happy learning and happy coding..</p>
+    </div>
+    <div class="container">
+        <div class="chat-box" id="chatBox"></div>
+        <div>
+            <input type="text" id="userInput" placeholder="Type your message...">
+            <input type="button" value="Send" onclick="sendMessage()">
+        </div>
+    </div>
+<script>
+function sendMessage() {
+            const userInput = document.getElementById('userInput').value;
+            if (!userInput) return;
+
+            // Append user message to chat box
+            const chatBox = document.getElementById('chatBox');
+            chatBox.innerHTML += `<h2><strong>You:</strong> ${userInput}</h2>`;
+
+            // Clear input field
+            document.getElementById('userInput').value = '';
+
+            // Send message to the Flask server
+            fetch('/get_response', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ user_input: userInput })
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(data => {
+                // Append agent response to chat box
+                chatBox.innerHTML += `<h2 style="color:black;"><strong>Agent:</strong> ${data.agent_response}</h2>`;
+                // Scroll chat box to the bottom
+                chatBox.scrollTop = chatBox.scrollHeight;
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                chatBox.innerHTML += `<p style="color:red;"><strong>Error:</strong> ${error.message}</p>`;
+            });
+        }
+    </script>
+  </body>
+</html>
